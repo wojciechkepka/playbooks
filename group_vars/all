@@ -1,0 +1,13 @@
+---
+
+repo_base: https://github.com/wojciechkepka
+
+username: wojtek
+region: Europe
+city: Warsaw
+keymap: pl
+language: en_US.UTF-8
+locales:
+- en_US.UTF-8
+- en_GB.UTF-8
+- pl_PL.UTF-8

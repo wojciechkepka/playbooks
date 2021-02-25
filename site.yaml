@@ -1,0 +1,4 @@
+---
+- name: My playbooks
+  hosts: localhost
+  remote_user: root

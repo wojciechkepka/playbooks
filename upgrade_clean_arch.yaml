@@ -1,0 +1,50 @@
+---
+- name: Upgrade and clean Arch Linux packages
+  hosts: localhost
+  remote_user: root
+  vars:
+    debug: false
+
+  tasks:
+
+  - name: upgrade packages
+    command: pacman -Syu --noconfirm
+    register: text
+
+  - debug: msg={{ text.stdout }}
+    when:
+      - text.stdout is defined
+      - debug
+
+  - name: find unused packages
+    command: pacman -Qdt --noconfirm
+    register: packages_with_ver
+    failed_when: False
+
+  - debug: msg={{ packages_with_ver.stdout }}
+    when:
+      - packages_with_ver.stdout is defined
+      - debug
+
+  - name: parse unused packages names
+    command: cut -d ' ' -f 1
+    register: packages
+    when: packages_with_ver.stdout is defined and packages_with_ver.stdout != ""
+    args:
+      stdin: "{{ packages_with_ver.stdout }}"
+
+  - debug: msg={{ packages.stdout }}
+    when:
+      - packages.stdout is defined
+      - debug
+
+  - name: remove unused packages
+    command: pacman -Rsn {{ packages.stdout }} --noconfirm
+    register: cleanup
+    when: packages.stdout is defined
+
+
+  - debug: msg={{ cleanup.stdout }}
+    when:
+      - cleanup.stdout is defined
+      - debug
